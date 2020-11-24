@@ -24,6 +24,12 @@ function apiFacade() {
     return fetch(URL + "/api/info/" + role, options).then(handleHttpErrors);
   };
 
+  const fetchDataFoodWasteByPostnummer = () => {
+    const options = makeOptions("GET", true); //True add's the token
+    return fetch(URL + "/api/foodwaste/postnummer" , options).then(handleHttpErrors);
+  };
+
+
   const fetchStarWarsData = () => {
     const options = makeOptions("GET", true); //True add's the token
     return fetch(URL + "/api/info/filmsparallel",options).then(handleHttpErrors);
@@ -68,6 +74,8 @@ function apiFacade() {
     logout,
     fetchData,
     fetchStarWarsData,
+    fetchDataFoodWasteByPostnummer
+    
   };
 }
 const facade = apiFacade();

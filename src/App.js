@@ -3,6 +3,7 @@ import facade from "./apiFacade";
 import StarWars from "./starWars";
 import WelcomePage from "./welcomePage";
 import { Switch, Route, NavLink } from "react-router-dom";
+import FoodItems from "./foodItems";
 
 function Header({loggedIn}) {
   return (
@@ -11,6 +12,11 @@ function Header({loggedIn}) {
         <li>
           <NavLink exact activeClassName="selected" to="/">
             Home
+          </NavLink>
+        </li>
+        <li>
+          <NavLink exact activeClassName="selected" to="/Products">
+            Products
           </NavLink>
         </li>
         <li>
@@ -62,7 +68,13 @@ function StarWarsPage() {
 
 
 
-
+function Products(){
+  
+  
+  return(
+    <FoodItems/>
+  )
+}
 
 
 function Home() {
@@ -173,6 +185,9 @@ function App() {
         </Route>
         <Route exact path="/StarWarsPage">
           <StarWarsPage />
+        </Route>
+        <Route exact path="/Products">
+          <Products />
         </Route>
       </Switch>
     </div>
