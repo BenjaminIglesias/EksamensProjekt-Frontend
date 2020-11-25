@@ -68,8 +68,7 @@ function StarWarsPage() {
 
 
 
-function Products(){
-    
+function Products(){    
   return(
     <FoodItems/>
   )
