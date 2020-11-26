@@ -49,14 +49,20 @@ ul.header li a:hover:not(.active) {
 }
 .card {
   width: 100px;
+  margin: 10px;
+  background-color: white;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+border-radius: 5px;
   
 }
 
 .description{
   color: Black;
-  font-size: 12px;
+ 
   font-weight: bold;
-  word-wrap: break-word
+  word-wrap: break-word;
+  font-size: 1.5vw;
 
 }
 .photo {
