@@ -15,8 +15,8 @@ export default function FoodItems(){
     const [location, setLocation] = useState();
 
 useEffect(()=>{
-    facade.fetchDataFoodWasteByPostnummer().then(data => setfetchedData(data)) 
-    setInitalData([...fetchedData])
+    facade.fetchDataFoodWasteByPostnummer().then(data => {setfetchedData(data);  setInitalData(data) }) 
+  
     if (window.navigator.geolocation) {
       window.navigator.geolocation
        .getCurrentPosition(getLocations);
@@ -34,7 +34,7 @@ console.log(fetchedData)
 
 return (<div><button onClick={() => {setSortedData(undefined)}}>Reset</button> <button onClick={() => setSortedData(sortAfterPrice([...initalData]))}>Sort after price</button> <button onClick={() => setSortedData(sortAfterDiscount([...initalData]))}>Sort after discount</button> <button onClick={() => setSortedData(sortAfterDistance([...initalData], location.latitude, location.longitude))}>Sort after distance</button><FoodItem fetchedData={sortedData ? sortedData : fetchedData}/> </div>);
 
-
+}
 
 
 function FoodItem({fetchedData}) {
@@ -173,4 +173,4 @@ function getdistance(lat1, lon1, lat2, lon2) {
   dist = dist * 1.609344 // To get from miles to km
 
   return dist
-}}
+}
