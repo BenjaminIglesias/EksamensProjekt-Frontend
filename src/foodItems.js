@@ -26,7 +26,7 @@ return <FoodItem fetchedData={fetchedData}/>;
 
 function FoodItem({fetchedData}) {
     let brandPhoto;
-    const [show, setShow] = useState(false);
+  
     let returned = fetchedData.map((data) => 
     {
 
@@ -70,13 +70,15 @@ if(data.store.brand === "foetex"){
     </div>
     </div>
     }>
+     <h1 className="description" style={{fontSize: "16px"}}>{data.product.description}</h1>    
        <p className="price" style={{fontWeight: "bold", color:"black"}}> Nuværende Pris: {data.offer.newPrice} kr.</p>
        <p className="price">Original Pris: {data.offer.originalPrice} kr.</p>
        <p className="price">Prisforskel: {data.offer.discount} kr.</p>
-       <p className="price">Besparingsprocent: {data.offer.percentDiscount} %</p>
-       <p>Udløber:</p>
-       <p>{data.offer.endTime.replace(/T/g, " ").substring(0,19)}</p>
+       <p className="price">Besparelse: {data.offer.percentDiscount} %</p>
+       <p>Varen udløber:</p>
+       <p>d. {data.offer.endTime.replace(/T/g, " ").substring(0,19)}</p>
     <p>Der er {data.offer.stock} tilbage</p>
+    
   
       </Popup>
     
