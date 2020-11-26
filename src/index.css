@@ -13,15 +13,24 @@ code {
 }
 
 ul.header {
+  top: 0;
+  left: 0;
   list-style-type: none;
   margin: 0;
   padding: 0;
-  overflow: hidden;
   background-color: #333;
+  position: fixed;
+  display: flex;
+  width: 100vw;
+  z-index: 999;
+  
+}
+.App-fake-header {
+  height: 52px;
 }
 
 ul.header li {
-  float: left;
+  
 }
 
 ul.header li a {

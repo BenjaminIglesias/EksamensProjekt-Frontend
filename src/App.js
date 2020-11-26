@@ -8,7 +8,8 @@ import FoodItems from "./foodItems";
 function Header({loggedIn}) {
   return (
     <div>
-      <ul className="header">
+      <div className="App-fake-header"/>
+      <ul className="App-header header">
         <li>
           <NavLink exact activeClassName="selected" to="/">
             Home
