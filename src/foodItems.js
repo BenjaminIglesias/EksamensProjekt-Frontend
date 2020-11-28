@@ -12,7 +12,7 @@ export default function FoodItems(){
     const [fetchedData, setfetchedData] = useState([]);
     const [initalData, setInitalData] = useState([]);
     const [sortedData, setSortedData] = useState();
-    const [location, setLocation] = useState();
+    const [location, setLocation] = useState({longitude : 0.0, latitude :0.0});
 
 useEffect(()=>{
     facade.fetchDataFoodWasteByPostnummer().then(data => {setfetchedData(data);  setInitalData(data) }) 
@@ -26,13 +26,18 @@ useEffect(()=>{
              const {coords} = position;
              setLocation(coords)
         }
-
-    
 },[])
 
-console.log(fetchedData)
 
-return (<div><button onClick={() => {setSortedData(undefined)}}>Reset</button> <button onClick={() => setSortedData(sortAfterPrice([...initalData]))}>Sort after price</button> <button onClick={() => setSortedData(sortAfterDiscount([...initalData]))}>Sort after discount</button> <button onClick={() => setSortedData(sortAfterDistance([...initalData], location.latitude, location.longitude))}>Sort after distance</button><FoodItem fetchedData={sortedData ? sortedData : fetchedData}/> </div>);
+
+
+
+return (<div> <SortDropdown setSortedData={setSortedData}
+                            data={initalData} 
+                            latitude={location.latitude} 
+                            longitude={location.longitude} />
+ 
+  <FoodItem fetchedData={sortedData ? sortedData : fetchedData}/> </div>);
 
 }
 
@@ -40,7 +45,7 @@ return (<div><button onClick={() => {setSortedData(undefined)}}>Reset</button> <
 function FoodItem({fetchedData}) {
     let brandPhoto;
   
-    let returned = fetchedData.map((data) => 
+    let returned = fetchedData.map((data, index) => 
     {
 
 if(data.clearances.length === 0){
@@ -57,7 +62,7 @@ if(data.store.brand === "foetex"){
        
       return (
    
-   <div>
+   <div key={index}>
     <img src={brandPhoto} alt="" style={{width:"30%"}}></img> 
        <h3> {data.store.name}</h3>
        <p></p>
@@ -69,38 +74,37 @@ if(data.store.brand === "foetex"){
    
    
     return( 
-    
-    <div style={{display: "inline-block"} }>
+   
+    <div style={{display: "inline-block"}} key={data.product.description} >
     
       <Popup modal trigger={
     
-    <div className="card" onClick={()=> {console.log(data.product.description)}} key={data.product.ean}   >
-    
+    <div className="card" onClick={()=> {console.log(data.product.description)}}>
     <img className="photo" src={data.product.image ? data.product.image : imageNotFound} alt="" ></img> 
      <div className="container">
-     <h1 className="description" style={{}}>{data.product.description}</h1>    
+     <h1 className="description">{data.product.description}</h1>    
      <p className="price" style={{fontWeight: "bold", color:"black"}}> {data.offer.newPrice} kr.</p>
     </div>
     </div>
-    }>
-     <h1 className="description">>{data.product.description}</h1>    
+
+      }>
+    
+     <h1 className="description">{data.product.description}</h1>    
        <p className="price" style={{fontWeight: "bold", color:"black"}}> Nuværende Pris: {data.offer.newPrice} kr.</p>
        <p className="price">Original Pris: {data.offer.originalPrice} kr.</p>
        <p className="price">Prisforskel: {data.offer.discount} kr.</p>
        <p className="price">Besparelse: {data.offer.percentDiscount} %</p>
        <p>Varen udløber:</p>
        <p>d. {data.offer.endTime.replace(/T/g, " ").substring(0,19)}</p>
-    <p>Der er {data.offer.stock} tilbage</p>
-    
+       <p>Der er {data.offer.stock} tilbage</p>
+ 
   
       </Popup>
-    
     </div>
     
     ) 
        })  
 }
-    
   
       </div>
       );
@@ -110,6 +114,47 @@ if(data.store.brand === "foetex"){
   }
   
 
+
+function SortDropdown({setSortedData, data, latitude, longitude}){
+
+  const [title, setTitle] = useState("Sorting after default >")
+
+  function selectSort(sort){
+   setTitle("Sorting after " + sort)
+
+   switch (sort) {
+     case "default":
+       setSortedData(undefined)
+       break;
+
+     case "price":
+       setSortedData(sortAfterPrice([...data]))
+       break;
+
+     case "discount":
+       setSortedData(sortAfterDiscount([...data]))
+       break;
+
+     case "distance":
+       setSortedData(sortAfterDistance([...data], latitude, longitude))
+       break;
+   }
+    
+  }
+
+  return (
+<div className="dropdown">
+  <button className="dropbtn">{title}</button>
+  <div className="dropdown-content">
+  <button onClick={() => selectSort("default")}>Reset sort</button>
+    <button onClick={() => selectSort("price")}>Sort after Price</button>
+    <button onClick={() => selectSort("discount")} >Sort after Discount</button>
+    <button onClick={() => selectSort("distance")} >Sort af distance</button>
+  </div>
+</div>
+
+  );
+}
 
 
   // MARK: Sort funktioner //
@@ -129,8 +174,6 @@ function sortAfterPrice(data){
 
 function sortAfterDiscount(data){
 
-
-
     const sortedData = data.map((foodwaste) => {
 
         let sortedClearences = foodwaste.clearances.sort((a,b ) => a.offer.discount - b.offer.discount)
@@ -144,7 +187,6 @@ function sortAfterDiscount(data){
 
 function sortAfterDistance(data, latitude, longitude){
 
-
 const sortedData = data.sort((a,b) => {
     
     let distanceA = getdistance(a.store.coordinates[1], a.store.coordinates[0], latitude, longitude) 
@@ -152,8 +194,6 @@ const sortedData = data.sort((a,b) => {
 
     return distanceA - distanceB
 })
-
-  console.log(sortedData)
     return sortedData;
 }
 
