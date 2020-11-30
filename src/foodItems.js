@@ -1,8 +1,9 @@
 import facade from "./apiFacade";
 import React, { useState, useEffect } from "react";
-
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
+import SideFilter from "./sideFilter.js"
+import MapItem from "./mapItem.js"
 import NettoLogo from "./logos/netto.png";
 import FoetexLogo from "./logos/foetex.png"
 import imageNotFound from "./imageNotFound.png"
@@ -32,10 +33,22 @@ useEffect(()=>{
 
 
 
-return (<div> <SortDropdown setSortedData={setSortedData}
+return (<div> 
+<div className="infoTitle"> 
+<br></br>
+<SortDropdown  setSortedData={setSortedData}
                             data={initalData} 
                             latitude={location.latitude} 
                             longitude={location.longitude} />
+ <h1>Tilbud under postnummert 2800 </h1>
+
+
+</div>
+<SideFilter/>
+
+
+
+ 
  
   <FoodItem fetchedData={sortedData ? sortedData : fetchedData}/> </div>);
 
@@ -62,9 +75,9 @@ if(data.store.brand === "foetex"){
        
       return (
    
-   <div key={index}>
+   <div className="stores" key={index}>
     <img src={brandPhoto} alt="" style={{width:"30%"}}></img> 
-       <h3> {data.store.name}</h3>
+       <h3> {data.store.name}</h3> <MapItem/>
        <p></p>
       <p>{data.store.address.street}, {data.store.address.zip} {data.store.address.city}</p>
      

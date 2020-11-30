@@ -95,6 +95,27 @@ body {
   background-size: cover;
 }
 
+.infoTitle{
+  top: 40px;
+  height: 100px;
+  position: sticky;
+  position: -webkit-sticky;
+  display: block;
+  background-color: white;
+z-index: 99;
+}
+.infoTitle h1{
+  margin: 20px;
+  padding-top: 40px;
+  display: inline;
+}
+
+
+.stores{
+  display: inline-block;
+  width: 75%;
+  margin-left: 220px;
+}
 
 
 /* Sort dropdown */ 
@@ -112,6 +133,7 @@ body {
 
 /* The container <div> - needed to position the dropdown content */
 .dropdown {
+  float: right;
   position: relative;
   display: inline-block;
 }
@@ -145,4 +167,50 @@ body {
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {
   background-color: #3e8e41;
+}
+
+
+/* MARK: SideFilter */
+
+
+
+.sideFilter{
+background-color: lightgray;
+width: 180px;
+padding-bottom: 10px;
+margin: 20px;
+display: inline-block;
+position: fixed;
+}
+
+.sideFilter h3 {
+  margin-top: 0px;
+  text-align: center;
+  background-color: white;
+}
+.sideLine{
+  height: 1px;
+  background-color: black;
+}
+.sideFilter div{
+  margin: 10px;
+}
+.sideFilter p{
+  display: inline;
+  
+}
+.unchecked{
+  padding: 10px;
+
+
+}
+
+.unchecked:hover{
+  background-color: yellowgreen;
+
+}
+
+.checked{
+  padding: 10px;
+  background-color: yellowgreen;
 }
