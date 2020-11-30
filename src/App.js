@@ -42,33 +42,6 @@ function Header({loggedIn}) {
 
 
 
-function StarWarsPage() {
-  const emptyData = {
-    planetInfo: [{ name: "Loading..." }],
-    characterInfo: [{ name: "Loading..." }],
-  };
-  const [fetchedData, setfetchedData] = useState(emptyData);
-  const [fetchedDataError, setfetchedDataError] = useState("");
-
-  useEffect(() => {
-    facade.fetchStarWarsData().then((data) => setfetchedData(data)).catch(err => err.fullError).then(err => setfetchedDataError(err));
-  }, []);
-
-  if(fetchedDataError){
-  return <h3>{fetchedDataError.message}</h3>
-  }
-  return <StarWars fetchedData={fetchedData} />;
-}
-
-
-
-
-
-
-
-
-
-
 function Products(){    
   return(
     <FoodItems/>
@@ -181,9 +154,6 @@ function App() {
         </Route>
         <Route exact path="/LoginPage">
           <LoginPage setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
-        </Route>
-        <Route exact path="/StarWarsPage">
-          <StarWarsPage />
         </Route>
         <Route exact path="/Products">
           <Products />

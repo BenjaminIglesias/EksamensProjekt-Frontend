@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import SideFilter from "./sideFilter.js"
-import MapItem from "./mapItem.js"
+import MapContainer from "./mapItem.js"
 import NettoLogo from "./logos/netto.png";
 import FoetexLogo from "./logos/foetex.png"
 import imageNotFound from "./imageNotFound.png"
@@ -45,17 +45,13 @@ return (<div>
 
 </div>
 <SideFilter/>
-
-
-
  
- 
-  <FoodItem fetchedData={sortedData ? sortedData : fetchedData}/> </div>);
+  <FoodItem fetchedData={sortedData ? sortedData : fetchedData} location={location}/> </div>);
 
 }
 
 
-function FoodItem({fetchedData}) {
+function FoodItem({fetchedData, location}) {
     let brandPhoto;
   
     let returned = fetchedData.map((data, index) => 
@@ -72,14 +68,17 @@ if(data.store.brand === "netto"){
 if(data.store.brand === "foetex"){
     brandPhoto = FoetexLogo
 }  
-       
+
       return (
    
    <div className="stores" key={index}>
     <img src={brandPhoto} alt="" style={{width:"30%"}}></img> 
-       <h3> {data.store.name}</h3> <MapItem/>
-       <p></p>
-      <p>{data.store.address.street}, {data.store.address.zip} {data.store.address.city}</p>
+    <div style={{display:"flex"}}>
+       <h3 style={{display:"inline-block"}}> {data.store.name} </h3>
+       <MapContainer loc={data.store.coordinates} name={data.store.name}/>
+    </div>
+      
+      <p style={{marginTop:"0px"}}>{data.store.address.street}, {data.store.address.zip} {data.store.address.city}</p>
      
 
         {data.clearances.map((data) => {

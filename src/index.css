@@ -88,6 +88,19 @@ ul.header li a:hover:not(.active) {
   font-weight: bold;
 
 }
+
+.showmapBut{
+padding-top: 10px;
+margin-left: 10px;;
+ width: 30px;
+ background: transparent;
+ border: none;
+}
+
+.showmapBut:hover{
+  cursor: pointer;
+  filter: brightness(0.9) invert(.7) sepia(.5) hue-rotate(100deg) saturate(200%);
+}
 body {
   background-image: url('mountain-background.png');
   background-repeat: no-repeat;
