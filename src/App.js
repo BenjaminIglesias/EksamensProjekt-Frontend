@@ -49,11 +49,6 @@ function Header({ loggedIn }) {
   );
 }
 
-function Products(){    
-  return(
-    <FoodItems/>
-  )
-}
 
 function Products() {
   return <FoodItems />;

@@ -2,24 +2,23 @@ import React, { useState, useEffect } from "react";
 
 
 
-export default function SideFilter(){
+export default function SideFilter({setSortedData, data, latitude, longitude}){
 
-        const [resetBut, setResetBut] = useState("unchecked")
+        const [resetBut, setResetBut] = useState("checked")
         const [priceBut, setpriceBut] = useState("unchecked")
         const [discountBut, setdiscountBut] = useState("unchecked")
         const [distanceBut, setdistanceBut] = useState("unchecked")
-   
 
+      function selectSort(sort){
 
-    function selectSort(sort){
-
-     
+    
         switch (sort) {
           case "default":
             setResetBut("checked");
             setpriceBut("unchecked")
             setdiscountBut("unchecked")
             setdistanceBut("unchecked")
+            setSortedData(undefined)
             break;
      
           case "price":
@@ -27,6 +26,7 @@ export default function SideFilter(){
             setpriceBut("checked")
             setdiscountBut("unchecked")
             setdistanceBut("unchecked")
+            setSortedData(sortAfterPrice([...data]))
             break;
      
           case "discount":
@@ -34,6 +34,7 @@ export default function SideFilter(){
             setpriceBut("unchecked")
             setdiscountBut("checked")
             setdistanceBut("unchecked")
+            setSortedData(sortAfterDiscount([...data]))
             break;
      
           case "distance":
@@ -41,8 +42,10 @@ export default function SideFilter(){
             setpriceBut("unchecked")
             setdiscountBut("unchecked")
             setdistanceBut("checked")
+            setSortedData(sortAfterDistance([...data], latitude, longitude))
             break;
-        }
+        
+      }
          
        }
 
@@ -50,12 +53,12 @@ return (
 
    
     <div className="sideFilter">
-   <h3>STORES</h3>
-<div> <button className={resetBut} onClick={() => selectSort("default")}> </button> <p>All</p> </div>
+   <h3>Sort after</h3>
+<div> <button className={resetBut} onClick={() => selectSort("default")}> </button> <p>Default</p> </div>
         <div className="sideLine"></div>
-        <div> <button className={priceBut} onClick={() => selectSort("price")} ></button> Netto </div>
-        <div> <button className={discountBut} onClick={() => selectSort("discount")} ></button> Føtex </div>
-        <div> <button className={distanceBut} onClick={() => selectSort("distance")}></button> Bilka </div>
+        <div> <button className={priceBut} onClick={() => selectSort("price")} ></button> Price </div>
+        <div> <button className={discountBut} onClick={() => selectSort("discount")} ></button> Discount </div>
+        <div> <button className={distanceBut} onClick={() => selectSort("distance")}></button> Distance </div>
    
     </div>
 
@@ -64,44 +67,61 @@ return (
 
 }
 
-/*
-function SortDropdown({setSortedData, data, latitude, longitude}){
 
-    const [title, setTitle] = useState("Sorting after default >")
-  
-    function selectSort(sort){
-     setTitle("Sorting after " + sort)
-  
-     switch (sort) {
-       case "default":
-         setSortedData(undefined)
-         break;
-  
-       case "price":
-         setSortedData(sortAfterPrice([...data]))
-         break;
-  
-       case "discount":
-         setSortedData(sortAfterDiscount([...data]))
-         break;
-  
-       case "distance":
-         setSortedData(sortAfterDistance([...data], latitude, longitude))
-         break;
-     }
-      
-    }
-  
-    return (
-  <div className="dropdown">
-    <button className="dropbtn">{title}</button>
-    <div className="dropdown-content">
-    <button onClick={() => selectSort("default")}>Reset sort</button>
-      <button onClick={() => selectSort("price")}>Sort after Price</button>
-      <button onClick={() => selectSort("discount")} >Sort after Discount</button>
-      <button onClick={() => selectSort("distance")} >Sort af distance</button>
-    </div>
-  </div>
-  
-    );
-  } */
+  // MARK: Sort funktioner //
+
+function sortAfterPrice(data){
+    let d = [...data]
+    const sortedData = d.map((foodwaste) => {
+
+        let sortedClearences = foodwaste.clearances.sort((a,b ) => a.offer.newPrice - b.offer.newPrice)
+            foodwaste.clearances = sortedClearences
+                
+                return foodwaste
+               })
+
+    return sortedData
+}
+
+function sortAfterDiscount(data){
+
+    const sortedData = data.map((foodwaste) => {
+
+        let sortedClearences = foodwaste.clearances.sort((a,b ) => a.offer.discount - b.offer.discount)
+            foodwaste.clearances = sortedClearences
+
+              return foodwaste   
+              })
+
+    return sortedData
+}
+
+function sortAfterDistance(data, latitude, longitude){
+
+const sortedData = data.sort((a,b) => {
+    
+    let distanceA = getdistance(a.store.coordinates[1], a.store.coordinates[0], latitude, longitude) 
+    let distanceB = getdistance(b.store.coordinates[1], b.store.coordinates[0], latitude, longitude) 
+
+    return distanceA - distanceB
+})
+    return sortedData;
+}
+
+
+function getdistance(lat1, lon1, lat2, lon2) {
+  var radlat1 = Math.PI * lat1/180
+  var radlat2 = Math.PI * lat2/180
+  var theta = lon1-lon2
+  var radtheta = Math.PI * theta/180
+  var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+  if (dist > 1) {
+      dist = 1;
+  }
+  dist = Math.acos(dist)
+  dist = dist * 180/Math.PI
+  dist = dist * 60 * 1.1515
+  dist = dist * 1.609344 // To get from miles to km
+
+  return dist
+}

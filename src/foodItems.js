@@ -8,6 +8,7 @@ import MapContainerAll from "./mapAllItems.js"
 import NettoLogo from "./logos/netto.png";
 import FoetexLogo from "./logos/foetex.png"
 import imageNotFound from "./imageNotFound.png"
+import WeatherItem from "./weatherItem"
 
 
 export default function FoodItems(){  
@@ -32,20 +33,30 @@ useEffect(()=>{
 
 
 
+let city = "Roskilde";
 
+fetchedData.map((data, index) => {
+  if (index = 0){
+    city = data.store.address.city
+  }
+
+})
+let i = city.indexOf(" ")
+let cityCut = city.substr(0, i)
 
 return (<div> 
 <div className="infoTitle"> 
 <br></br>
-<SortDropdown  setSortedData={setSortedData}
+
+ <h1>Tilbud under postnummert 2800 </h1>
+ <WeatherItem city={cityCut}/>
+</div>
+
+<SideFilter setSortedData={setSortedData}
                             data={initalData} 
                             latitude={location.latitude} 
                             longitude={location.longitude} />
- <h1>Tilbud under postnummert 2800 </h1>
 
-
-</div>
-<SideFilter/>
 <MapContainerAll data={fetchedData} initLoc={[{lat:54, lng:12.4}]} />
  
   <FoodItem fetchedData={sortedData ? sortedData : fetchedData} location={location}/> </div>);
@@ -128,103 +139,3 @@ if(data.store.brand === "foetex"){
   }
   
 
-
-function SortDropdown({setSortedData, data, latitude, longitude}){
-
-  const [title, setTitle] = useState("Sorting after default >")
-
-  function selectSort(sort){
-   setTitle("Sorting after " + sort)
-
-   switch (sort) {
-     case "default":
-       setSortedData(undefined)
-       break;
-
-     case "price":
-       setSortedData(sortAfterPrice([...data]))
-       break;
-
-     case "discount":
-       setSortedData(sortAfterDiscount([...data]))
-       break;
-
-     case "distance":
-       setSortedData(sortAfterDistance([...data], latitude, longitude))
-       break;
-   }
-    
-  }
-
-  return (
-<div className="dropdown">
-  <button className="dropbtn">{title}</button>
-  <div className="dropdown-content">
-  <button onClick={() => selectSort("default")}>Reset sort</button>
-    <button onClick={() => selectSort("price")}>Sort after Price</button>
-    <button onClick={() => selectSort("discount")} >Sort after Discount</button>
-    <button onClick={() => selectSort("distance")} >Sort af distance</button>
-  </div>
-</div>
-
-  );
-}
-
-
-  // MARK: Sort funktioner //
-
-function sortAfterPrice(data){
-    let d = [...data]
-    const sortedData = d.map((foodwaste) => {
-
-        let sortedClearences = foodwaste.clearances.sort((a,b ) => a.offer.newPrice - b.offer.newPrice)
-            foodwaste.clearances = sortedClearences
-                
-                return foodwaste
-               })
-
-    return sortedData
-}
-
-function sortAfterDiscount(data){
-
-    const sortedData = data.map((foodwaste) => {
-
-        let sortedClearences = foodwaste.clearances.sort((a,b ) => a.offer.discount - b.offer.discount)
-            foodwaste.clearances = sortedClearences
-
-              return foodwaste   
-              })
-
-    return sortedData
-}
-
-function sortAfterDistance(data, latitude, longitude){
-
-const sortedData = data.sort((a,b) => {
-    
-    let distanceA = getdistance(a.store.coordinates[1], a.store.coordinates[0], latitude, longitude) 
-    let distanceB = getdistance(b.store.coordinates[1], b.store.coordinates[0], latitude, longitude) 
-
-    return distanceA - distanceB
-})
-    return sortedData;
-}
-
-
-function getdistance(lat1, lon1, lat2, lon2) {
-  var radlat1 = Math.PI * lat1/180
-  var radlat2 = Math.PI * lat2/180
-  var theta = lon1-lon2
-  var radtheta = Math.PI * theta/180
-  var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-  if (dist > 1) {
-      dist = 1;
-  }
-  dist = Math.acos(dist)
-  dist = dist * 180/Math.PI
-  dist = dist * 60 * 1.1515
-  dist = dist * 1.609344 // To get from miles to km
-
-  return dist
-}

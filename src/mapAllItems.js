@@ -34,10 +34,10 @@ import mapIcon from "./icons/googlemapIcon.png"
         initialCenter={{ lat: 55.69, lng: 12.56}}
       >
 
-          {locationArray.map((data)=>{
+          {locationArray.map((data, index)=>{
               if(data !== undefined){
                 return(
-                    <Marker  position={{
+                    <Marker  key={index} position={{
                         lat: data.lat,
                         lng: data.lng
                        }}       

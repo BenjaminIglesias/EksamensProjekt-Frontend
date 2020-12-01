@@ -34,12 +34,13 @@ function apiFacade() {
     return fetch(URL + "/api/foodwaste/zip"+zip , options).then(handleHttpErrors);
   };
 
-
-  const fetchStarWarsData = () => {
-    const options = makeOptions("GET", true); //True add's the token
-    return fetch(URL + "/api/info/filmsparallel",options).then(handleHttpErrors);
+  const fetchDataWeatherByCity = (city) => {
+    console.log("/api/vejret/by/"+city)
+    const options = makeOptions("GET"); //True add's the token
+    return fetch(URL + "/api/vejret/by/"+city , options).then(handleHttpErrors);
   };
 
+ 
   const makeOptions = (method, addToken, body) => {
     var opts = {
       method: method,
@@ -78,7 +79,7 @@ function apiFacade() {
     login,
     logout,
     fetchData,
-    fetchStarWarsData,
+    fetchDataWeatherByCity,
     fetchDataFoodWasteByPostnummer
     
   };
