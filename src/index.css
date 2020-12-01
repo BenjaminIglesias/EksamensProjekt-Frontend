@@ -47,6 +47,21 @@ ul.header li a:hover:not(.active) {
 .selected {
   background-color: black;
 }
+
+.showmapAllBut{
+  cursor: pointer;
+  position: fixed;
+  width: 180px;
+margin-left: 20px;
+  top: 400px;
+  text-align: center;
+  
+  }
+.showmapAllBut h4{
+margin: 0px;
+}
+
+
 .card {
   width: 200px;
  position: relative;

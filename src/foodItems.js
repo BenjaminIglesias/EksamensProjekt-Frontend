@@ -4,6 +4,7 @@ import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import SideFilter from "./sideFilter.js"
 import MapContainer from "./mapItem.js"
+import MapContainerAll from "./mapAllItems.js"
 import NettoLogo from "./logos/netto.png";
 import FoetexLogo from "./logos/foetex.png"
 import imageNotFound from "./imageNotFound.png"
@@ -45,6 +46,7 @@ return (<div>
 
 </div>
 <SideFilter/>
+<MapContainerAll data={fetchedData} initLoc={[{lat:54, lng:12.4}]} />
  
   <FoodItem fetchedData={sortedData ? sortedData : fetchedData} location={location}/> </div>);
 
