@@ -29,6 +29,11 @@ function apiFacade() {
     return fetch(URL + "/api/foodwaste/postnummer" , options).then(handleHttpErrors);
   };
 
+  const fetchDataFoodWasteBySearchZip = (zip) => {
+    const options = makeOptions("GET", true); //True add's the token
+    return fetch(URL + "/api/foodwaste/zip"+zip , options).then(handleHttpErrors);
+  };
+
 
   const fetchStarWarsData = () => {
     const options = makeOptions("GET", true); //True add's the token
