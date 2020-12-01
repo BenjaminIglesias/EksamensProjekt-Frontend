@@ -26,14 +26,14 @@ function Header({ loggedIn }) {
           </NavLink>
         </li>
         
-        <li className="Shoppingcart" style={{float:'right'}}>
+        <li className="Shoppingcart">
           <NavLink activeClassName="selected" to="/Shoppingcart">
             <img
               src={shoppingcart}
               alt=""
               type="image/"
               width="35"
-              height="29"
+              height="22"
             />
           </NavLink>
         </li>
