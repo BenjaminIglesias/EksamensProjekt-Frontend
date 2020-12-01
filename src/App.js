@@ -4,11 +4,11 @@ import StarWars from "./starWars";
 import WelcomePage from "./welcomePage";
 import { Switch, Route, NavLink } from "react-router-dom";
 import FoodItems from "./foodItems";
-
-function Header({loggedIn}) {
+import shoppingcart from "./logos/shopping-cart.PNG";
+function Header({ loggedIn }) {
   return (
     <div>
-      <div className="App-fake-header"/>
+      <div className="App-fake-header" />
       <ul className="App-header header">
         <li>
           <NavLink exact activeClassName="selected" to="/">
@@ -25,22 +25,29 @@ function Header({loggedIn}) {
             Login
           </NavLink>
         </li>
-        {loggedIn && (
-          <li>
-          <NavLink activeClassName="selected" to="/StarwarsPage">
-            Star Wars
+        
+        <li className="Shoppingcart" style={{float:'right'}}>
+          <NavLink activeClassName="selected" to="/Shoppingcart">
+            <img
+              src={shoppingcart}
+              alt=""
+              type="image/"
+              width="35"
+              height="29"
+            />
           </NavLink>
         </li>
+        {loggedIn && (
+          <li>
+            <NavLink activeClassName="selected" to="/StarwarsPage">
+              Star Wars
+            </NavLink>
+          </li>
         )}
-  
       </ul>
     </div>
   );
 }
-
-
-
-
 
 function StarWarsPage() {
   const emptyData = {
@@ -51,35 +58,25 @@ function StarWarsPage() {
   const [fetchedDataError, setfetchedDataError] = useState("");
 
   useEffect(() => {
-    facade.fetchStarWarsData().then((data) => setfetchedData(data)).catch(err => err.fullError).then(err => setfetchedDataError(err));
+    facade
+      .fetchStarWarsData()
+      .then((data) => setfetchedData(data))
+      .catch((err) => err.fullError)
+      .then((err) => setfetchedDataError(err));
   }, []);
 
-  if(fetchedDataError){
-  return <h3>{fetchedDataError.message}</h3>
+  if (fetchedDataError) {
+    return <h3>{fetchedDataError.message}</h3>;
   }
   return <StarWars fetchedData={fetchedData} />;
 }
 
-
-
-
-
-
-
-
-
-
-function Products(){    
-  return(
-    <FoodItems/>
-  )
+function Products() {
+  return <FoodItems />;
 }
 
-
 function Home() {
-  return (
-    <WelcomePage/>
-    );
+  return <WelcomePage />;
 }
 
 function LoginPage({ setLoggedIn, loggedIn }) {
