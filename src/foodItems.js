@@ -18,6 +18,7 @@ useEffect(()=>{
 
 
 
+
 return <FoodItem fetchedData={fetchedData}/>;
 
 
