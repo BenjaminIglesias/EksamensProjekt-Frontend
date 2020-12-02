@@ -5,6 +5,10 @@ import WelcomePage from "./welcomePage";
 import { Switch, Route, NavLink } from "react-router-dom";
 import FoodItems from "./foodItems";
 import shoppingcart from "./logos/shopping-cart.PNG";
+
+
+
+
 function Header({ loggedIn }) {
   return (
     <div>
@@ -16,17 +20,12 @@ function Header({ loggedIn }) {
           </NavLink>
         </li>
         <li>
-          <NavLink exact activeClassName="selected" to="/Products">
-            Products
-          </NavLink>
-        </li>
-        <li>
           <NavLink activeClassName="selected" to="/LoginPage">
             Login
           </NavLink>
-        </li>
-        
-        <li className="Shoppingcart">
+        </li>        
+        {loggedIn && (
+        <li className="Shoppingcart" style={{float:'right'}}>
           <NavLink activeClassName="selected" to="/Shoppingcart">
             <img
               src={shoppingcart}
@@ -37,25 +36,31 @@ function Header({ loggedIn }) {
             />
           </NavLink>
         </li>
-        {loggedIn && (
-          <li>
-            <NavLink activeClassName="selected" to="/StarwarsPage">
-              Star Wars
-            </NavLink>
-          </li>
-        )}
+	   )}
+     	
       </ul>
     </div>
   );
 }
-
-
 function Products() {
-  return <FoodItems />;
+ 
+
+  return <FoodItems postalCode={globalPostalCode} />;
+ 
 }
 
+let globalPostalCode = "fail";
 function Home() {
-  return <WelcomePage />;
+  
+  const [postalCode, setPostalCode] = useState("");
+
+
+function handleChange(newValue){
+  setPostalCode(newValue);
+  globalPostalCode = newValue;
+} 
+
+  return <WelcomePage  postalCode={postalCode} onChange={handleChange}/>;
 }
 
 function LoginPage({ setLoggedIn, loggedIn }) {
@@ -146,20 +151,24 @@ function LoggedIn() {
 }
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
+const [loggedIn, setLoggedIn] = useState(false);
+globalPostalCode = "fail"
+
+
+
 
   return (
     <div>
       <Header loggedIn={loggedIn} />
       <Switch>
         <Route exact path="/">
-          <Home />
+          <Home    />
         </Route>
         <Route exact path="/LoginPage">
           <LoginPage setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
         </Route>
         <Route exact path="/Products">
-          <Products />
+          <Products/>
         </Route>
       </Switch>
     </div>

@@ -24,9 +24,9 @@ function apiFacade() {
     return fetch(URL + "/api/info/" + role, options).then(handleHttpErrors);
   };
 
-  const fetchDataFoodWasteByPostnummer = () => {
+  const fetchDataFoodWasteByPostnummer = (value) => {  
     const options = makeOptions("GET", true); //True add's the token
-    return fetch(URL + "/api/foodwaste/postnummer" , options).then(handleHttpErrors);
+    return fetch(URL + "/api/foodwaste/postnummer/"+value , options).then(handleHttpErrors);
   };
 
   const fetchDataFoodWasteBySearchZip = (zip) => {
