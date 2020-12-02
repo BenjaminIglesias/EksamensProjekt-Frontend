@@ -1,9 +1,27 @@
-export default function Content(){
-   return(
+import {Link} from 'react-router-dom'
+
+import React, { useState, useEffect } from "react";
+let postalCode = "";
+
+export default function Content(props){
+
+    function handleChange(event) {
+        // Here, we invoke the callback with the new value
+         props.onChange(event.target.value);
+        
+    }
+
+return(
 <div>
     <h1 style={{textAlign:"center", fontFamily: "cursive" }} >Velkommen til FoodSaver</h1>
     <h3 style={{textAlign:"center", fontFamily: "cursive"}}>Indtast dit postnummer nedenunder</h3>
-<div class="block"><input type="text" class="input-res"  maxlength="4"/><a class="btn sky block circular">Vis</a>
+<div className="block">
+    <input type="text" className="input-res" value={props.value} onChange={handleChange} maxLength="4"/>
+    
+<Link to={{pathname: '/Products'
+}} >
+<button className="btn sky block circular">Vis</button>
+</Link>
 </div>
 
 <br/>
@@ -14,13 +32,12 @@ export default function Content(){
 }}>Datovarer fra din lokale Netto, Føtex eller Bilka butik</h3>
 
 
-<h3 style={{textAlign:"center", fontFamily: "cursive"
-}}>Gennemsnitlig besparelse på 50%!</h3>
+
 </div>
     
 
 
     ) 
-   }
+}
 
    

@@ -5,47 +5,30 @@ import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import NettoLogo from "./logos/netto.png";
 import FoetexLogo from "./logos/foetex.png"
-import imageNotFound from "./imageNotFound.png"
+import BilkaLogo from "./logos/bilka.png"
 
 
-export default function FoodItems(){  
-    const [fetchedData, setfetchedData] = useState([]);
-    const [initalData, setInitalData] = useState([]);
-    const [sortedData, setSortedData] = useState();
-    const [location, setLocation] = useState({longitude : 0.0, latitude :0.0});
+export default function FoodItems({postalCode}){  
+  const [fetchedData, setfetchedData] = useState([]);
 
 useEffect(()=>{
-    facade.fetchDataFoodWasteByPostnummer().then(data => {setfetchedData(data);  setInitalData(data) }) 
-  
-    if (window.navigator.geolocation) {
-      window.navigator.geolocation
-       .getCurrentPosition(getLocations);
-        } 
-     
-        function getLocations(position){
-             const {coords} = position;
-             setLocation(coords)
-        }
+    facade.fetchDataFoodWasteByPostnummer(postalCode).then(data => setfetchedData(data))    
 },[])
 
 
 
 
+return <FoodItem fetchedData={fetchedData}/>;
 
-return (<div> <SortDropdown setSortedData={setSortedData}
-                            data={initalData} 
-                            latitude={location.latitude} 
-                            longitude={location.longitude} />
- 
-  <FoodItem fetchedData={sortedData ? sortedData : fetchedData}/> </div>);
+
+
 
 }
-
 
 function FoodItem({fetchedData}) {
     let brandPhoto;
   
-    let returned = fetchedData.map((data, index) => 
+    let returned = fetchedData.map((data) => 
     {
 
 if(data.clearances.length === 0){
@@ -59,10 +42,15 @@ if(data.store.brand === "netto"){
 if(data.store.brand === "foetex"){
     brandPhoto = FoetexLogo
 }  
+
+
+if(data.store.brand === "bilka"){
+    brandPhoto = BilkaLogo
+}  
        
       return (
    
-   <div key={index}>
+   <div>
     <img src={brandPhoto} alt="" style={{width:"30%"}}></img> 
        <h3> {data.store.name}</h3>
        <p></p>
@@ -74,38 +62,46 @@ if(data.store.brand === "foetex"){
    
    
     return( 
-   
-    <div style={{display: "inline-block"}} key={data.product.description} >
+    
+    <div style={{display: "inline-block"} }>
     
       <Popup modal trigger={
     
-    <div className="card" onClick={()=> {console.log(data.product.description)}}>
-    <img className="photo" src={data.product.image ? data.product.image : imageNotFound} alt="" ></img> 
+    <div className="card" key={data.product.ean}   >
+    
+    <img className="photo" src={data.product.image} alt="" ></img> 
      <div className="container">
-     <h1 className="description">{data.product.description}</h1>    
+     <h1 className="description" style={{}}>{data.product.description}</h1>    
      <p className="price" style={{fontWeight: "bold", color:"black"}}> {data.offer.newPrice} kr.</p>
     </div>
     </div>
-
-      }>
-    
-     <h1 className="description">{data.product.description}</h1>    
+    }>
+     <h1 className="description" style={{fontSize: "16px"}}>{data.product.description}</h1>    
        <p className="price" style={{fontWeight: "bold", color:"black"}}> Nuværende Pris: {data.offer.newPrice} kr.</p>
        <p className="price">Original Pris: {data.offer.originalPrice} kr.</p>
        <p className="price">Prisforskel: {data.offer.discount} kr.</p>
        <p className="price">Besparelse: {data.offer.percentDiscount} %</p>
        <p>Varen udløber:</p>
        <p>d. {data.offer.endTime.replace(/T/g, " ").substring(0,19)}</p>
-       <p>Der er {data.offer.stock} tilbage</p>
- 
+    <p>Der er {data.offer.stock} tilbage</p>
+    
   
       </Popup>
+    
     </div>
     
     ) 
-       })  
-}
+        
+
   
+       }) 
+       
+}
+    
+      
+
+        
+
       </div>
       );
       }
@@ -113,104 +109,3 @@ if(data.store.brand === "foetex"){
     return returned;
   }
   
-
-
-function SortDropdown({setSortedData, data, latitude, longitude}){
-
-  const [title, setTitle] = useState("Sorting after default >")
-
-  function selectSort(sort){
-   setTitle("Sorting after " + sort)
-
-   switch (sort) {
-     case "default":
-       setSortedData(undefined)
-       break;
-
-     case "price":
-       setSortedData(sortAfterPrice([...data]))
-       break;
-
-     case "discount":
-       setSortedData(sortAfterDiscount([...data]))
-       break;
-
-     case "distance":
-       setSortedData(sortAfterDistance([...data], latitude, longitude))
-       break;
-   }
-    
-  }
-
-  return (
-<div className="dropdown">
-  <button className="dropbtn">{title}</button>
-  <div className="dropdown-content">
-  <button onClick={() => selectSort("default")}>Reset sort</button>
-    <button onClick={() => selectSort("price")}>Sort after Price</button>
-    <button onClick={() => selectSort("discount")} >Sort after Discount</button>
-    <button onClick={() => selectSort("distance")} >Sort af distance</button>
-  </div>
-</div>
-
-  );
-}
-
-
-  // MARK: Sort funktioner //
-
-function sortAfterPrice(data){
-    let d = [...data]
-    const sortedData = d.map((foodwaste) => {
-
-        let sortedClearences = foodwaste.clearances.sort((a,b ) => a.offer.newPrice - b.offer.newPrice)
-            foodwaste.clearances = sortedClearences
-                
-                return foodwaste
-               })
-
-    return sortedData
-}
-
-function sortAfterDiscount(data){
-
-    const sortedData = data.map((foodwaste) => {
-
-        let sortedClearences = foodwaste.clearances.sort((a,b ) => a.offer.discount - b.offer.discount)
-            foodwaste.clearances = sortedClearences
-
-              return foodwaste   
-              })
-
-    return sortedData
-}
-
-function sortAfterDistance(data, latitude, longitude){
-
-const sortedData = data.sort((a,b) => {
-    
-    let distanceA = getdistance(a.store.coordinates[1], a.store.coordinates[0], latitude, longitude) 
-    let distanceB = getdistance(b.store.coordinates[1], b.store.coordinates[0], latitude, longitude) 
-
-    return distanceA - distanceB
-})
-    return sortedData;
-}
-
-
-function getdistance(lat1, lon1, lat2, lon2) {
-  var radlat1 = Math.PI * lat1/180
-  var radlat2 = Math.PI * lat2/180
-  var theta = lon1-lon2
-  var radtheta = Math.PI * theta/180
-  var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-  if (dist > 1) {
-      dist = 1;
-  }
-  dist = Math.acos(dist)
-  dist = dist * 180/Math.PI
-  dist = dist * 60 * 1.1515
-  dist = dist * 1.609344 // To get from miles to km
-
-  return dist
-}
