@@ -16,10 +16,17 @@ export default function FoodItems(){
     const [initalData, setInitalData] = useState([]);
     const [sortedData, setSortedData] = useState();
     const [location, setLocation] = useState({longitude : 0.0, latitude :0.0});
-
+    const [city, setCity] = useState("");
 useEffect(()=>{
-    facade.fetchDataFoodWasteByPostnummer().then(data => {setfetchedData(data);  setInitalData(data) }) 
-  
+
+    facade.fetchDataFoodWasteByPostnummer().then(data => {
+      setfetchedData(data);  
+      setInitalData(data)
+      
+      newLocal(data)
+      
+    }) 
+
     if (window.navigator.geolocation) {
       window.navigator.geolocation
        .getCurrentPosition(getLocations);
@@ -29,27 +36,42 @@ useEffect(()=>{
              const {coords} = position;
              setLocation(coords)
         }
+
+        
+     
 },[])
 
 
 
-let city = "Roskilde";
+const newLocal = (data) => {
+   data.map((data, index) => {
+  let res;
+  if (index == 0) {
+    res = data.store.address.city;
 
-fetchedData.map((data, index) => {
-  if (index = 0){
-    city = data.store.address.city
+    if (res.indexOf(" ") > 0) {
+      let i = res.indexOf(" ");
+      let cityCut = res.substr(0, i);
+
+      setCity(cityCut);
+    } else {
+
+      setCity(res);
+    }
+
   }
 
-})
-let i = city.indexOf(" ")
-let cityCut = city.substr(0, i)
+});
+}
 
 return (<div> 
 <div className="infoTitle"> 
 <br></br>
 
  <h1>Tilbud under postnummert 2800 </h1>
- <WeatherItem city={cityCut}/>
+ 
+
+ <WeatherItem city={city}/>
 </div>
 
 <SideFilter setSortedData={setSortedData}

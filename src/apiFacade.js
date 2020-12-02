@@ -35,7 +35,6 @@ function apiFacade() {
   };
 
   const fetchDataWeatherByCity = (city) => {
-    console.log("/api/vejret/by/"+city)
     const options = makeOptions("GET"); //True add's the token
     return fetch(URL + "/api/vejret/by/"+city , options).then(handleHttpErrors);
   };

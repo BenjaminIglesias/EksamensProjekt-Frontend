@@ -9,39 +9,23 @@ export default function WheaterItem({city}){
 
 const [weather, setWeather] = useState({})
 
-
 useEffect(()=> {
-    facade.fetchDataWeatherByCity(city ? city : "København" )
+
+ 
+    facade.fetchDataWeatherByCity(city)
     .then((data) => {
         setWeather(data)
+    
     })
-}, [])
+    
+  
+}, [city])
 
 
- let weatherImage; 
-    switch (weather.skyText) {
-        case "Solrigt":
-            weatherImage = sol
-        break;
 
-        case "Klart":
-            weatherImage = sol
-            break;
-        
-        case "Skyet":
-        weatherImage = skyet
-         break;
-        
-        case "Mest skyet", "Delvis solrig":
-            weatherImage = mestSkyet
-        break;  
-        case "Regn", "Let regn", "Regnbyger":
-            weatherImage = mestSkyet
-        break;        
-        
-        default:
-            weatherImage = skyet
-    }
+
+ let weatherImage = setImage(weather.skyText)
+    
 
 
 return(
@@ -52,4 +36,26 @@ return(
     </div>
 )
 
+}
+
+
+function setImage(weather) {
+    switch (weather) {
+        case "Solrigt", "Klart":
+           return sol;
+
+        case "Skyet":
+        return skyet;
+        
+        
+        case "Mest skyet", "Delvis solrig":
+            return mestSkyet;
+       
+        case "Regn", "Let regn", "Regnbyger":
+            return regn;
+            
+        
+        default:
+            return skyet;
+    }
 }
