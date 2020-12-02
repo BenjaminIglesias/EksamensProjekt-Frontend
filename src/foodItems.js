@@ -28,7 +28,7 @@ useEffect(()=>{
     setfetchedData(data);  
     setInitalData(data)
     
-    newLocal(data)
+    getAndSetCurrentCity(data)
     
   }) 
 
@@ -45,19 +45,16 @@ useEffect(()=>{
 
 
 
-const newLocal = (data) => {
+const getAndSetCurrentCity = (data) => {
    data.map((data, index) => {
   let res;
   if (index == 0) {
     res = data.store.address.city;
-
     if (res.indexOf(" ") > 0) {
       let i = res.indexOf(" ");
       let cityCut = res.substr(0, i);
-
       setCity(cityCut);
     } else {
-
       setCity(res);
     }
 

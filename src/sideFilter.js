@@ -57,7 +57,7 @@ return (
 <div> <button className={resetBut} onClick={() => selectSort("default")}> </button> <p>Default</p> </div>
         <div className="sideLine"></div>
         <div> <button className={priceBut} onClick={() => selectSort("price")} ></button> Price </div>
-        <div> <button className={discountBut} onClick={() => selectSort("discount")} ></button> Discount </div>
+        <div> <button className={discountBut} onClick={() => selectSort("discount")} ></button> Besparelse </div>
         <div> <button className={distanceBut} onClick={() => selectSort("distance")}></button> Distance </div>
    
     </div>
@@ -87,7 +87,7 @@ function sortAfterDiscount(data){
 
     const sortedData = data.map((foodwaste) => {
 
-        let sortedClearences = foodwaste.clearances.sort((a,b ) => a.offer.discount - b.offer.discount)
+        let sortedClearences = foodwaste.clearances.sort((a,b ) => b.offer.percentDiscount - a.offer.percentDiscount)
             foodwaste.clearances = sortedClearences
 
               return foodwaste   
