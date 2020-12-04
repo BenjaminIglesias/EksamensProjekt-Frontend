@@ -24,7 +24,7 @@ function apiFacade() {
     return fetch(URL + "/api/info/" + role, options).then(handleHttpErrors);
   };
 
-  const fetchDataFoodWasteByPostnummer = (value,) => {  
+  const fetchDataFoodWasteByPostnummer = (value) => {  
     const options = makeOptions("GET", true); //True add's the token
     let city = "/"+postnummer[value]
       city = getAndSetCurrentCity(city)
