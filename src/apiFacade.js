@@ -31,13 +31,13 @@ function apiFacade() {
     return fetch(URL + "/api/foodwaste/data/"+value+city , options).then(handleHttpErrors);
   };
 
+
+  
   const fetchDataFoodWasteBySearchZip = (zip) => {
     const options = makeOptions("GET", true); //True add's the token
     return fetch(URL + "/api/foodwaste/zip"+zip , options).then(handleHttpErrors);
   };
 
-
- 
   const makeOptions = (method, addToken, body) => {
     var opts = {
       method: method,
