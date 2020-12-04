@@ -3,34 +3,14 @@ import facade from "./apiFacade"
 import skyet from "./icons/skyet.png"
 import mestSkyet from "./icons/mestSkyet.png"
 import regn from "./icons/regn.png"
-import sne from "./icons/Sne.png"
 import sol from "./icons/Solrigt.png"
-export default function WheaterItem({city}){
-
-const [weather, setWeather] = useState({})
-
-useEffect(()=> {
-
- 
-    facade.fetchDataWeatherByCity(city)
-    .then((data) => {
-        setWeather(data)
-    
-    })
-    
-  
-}, [city])
-
-
-
+export default function WheaterItem({weather}){
 
  let weatherImage = setImage(weather.skyText)
-    
-
 
 return(
     <div className="weatherBox">
-                <h5>Current weather</h5>
+        <h5>Current weather</h5>
         <img src={weatherImage}/>
         <h3>{weather.temperature}°</h3>
     </div>
@@ -38,22 +18,19 @@ return(
 
 }
 
-
 function setImage(weather) {
     switch (weather) {
         case "Solrigt", "Klart":
-           return sol;
+         return sol;
 
         case "Skyet":
         return skyet;
         
-        
         case "Mest skyet", "Delvis solrig":
-            return mestSkyet;
+        return mestSkyet;
        
         case "Regn", "Let regn", "Regnbyger":
-            return regn;
-            
+        return regn;    
         
         default:
             return skyet;

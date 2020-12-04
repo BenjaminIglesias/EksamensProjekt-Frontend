@@ -126,8 +126,8 @@ body {
 }
 
 .infoTitle{
-  top: 51px;
-  height: 100px;
+  top: 45px;
+  height: 110px;
   position: sticky;
   position: -webkit-sticky;
   display: block;

@@ -44,9 +44,7 @@ function Header({ loggedIn }) {
 }
 function Products() {
  
-
-  return <FoodItems postalCode={globalPostalCode} />;
- 
+return <FoodItems postalCode={globalPostalCode} />; 
 }
 
 let globalPostalCode = "fail";

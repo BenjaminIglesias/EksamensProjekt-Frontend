@@ -10,69 +10,53 @@ import FoetexLogo from "./logos/foetex.png"
 import imageNotFound from "./imageNotFound.png"
 import WeatherItem from "./weatherItem"
 
-import BilkaLogo from "./logos/bilka.png"
-
-
-
-
 
 export default function FoodItems({postalCode}){  
-  const [fetchedData, setfetchedData] = useState([]);
-  const [initalData, setInitalData] = useState([]);
-  const [sortedData, setSortedData] = useState();
-  const [location, setLocation] = useState({longitude : 0.0, latitude :0.0});
-  const [city, setCity] = useState("");
+    const [fetchedData, setfetchedData] = useState([]);
+    const [initalData, setInitalData] = useState([]);
+    const [sortedData, setSortedData] = useState();
+    const [location, setLocation] = useState({longitude : 0.0, latitude :0.0});
+    const [weather, setWeather] = useState({});
+    const [err, setErr] = useState("");
+
 useEffect(()=>{
+    facade.fetchDataFoodWasteByPostnummer(postalCode).then(data => {
+      setfetchedData(data.foodwaste);  
+      setInitalData(data.foodwaste)
+      setWeather(data.vejret)
+    }).catch((error) => {
+     setErr("Could not load data from server. Try another zip code")
+    })
 
-  facade.fetchDataFoodWasteByPostnummer(postalCode).then(data => {
-    setfetchedData(data);  
-    setInitalData(data)
-    
-    getAndSetCurrentCity(data)
-    
-  }) 
+    /* Propmts user to allow geolocation*/ 
+    if (window.navigator.geolocation) {
+      window.navigator.geolocation
+       .getCurrentPosition(getLocations);
+        } 
+     
+        function getLocations(position){
+             const {coords} = position;
+             setLocation(coords)
+        }
 
-  if (window.navigator.geolocation) {
-    window.navigator.geolocation
-     .getCurrentPosition(getLocations);
-      } 
-   
-      function getLocations(position){
-           const {coords} = position;
-           setLocation(coords)
-      }
-    },[])
+},[])
 
-
-
-const getAndSetCurrentCity = (data) => {
-   data.map((data, index) => {
-  let res;
-  if (index == 0) {
-    res = data.store.address.city;
-    if (res.indexOf(" ") > 0) {
-      let i = res.indexOf(" ");
-      let cityCut = res.substr(0, i);
-      setCity(cityCut);
-    } else {
-      setCity(res);
-    }
-
-  }
-
-});
-}
 
 return (<div> 
+
 <div className="infoTitle"> 
 <br></br>
+<<<<<<< HEAD
 
  <h1>Tilbud under postnummer {postalCode} </h1>
  
 
  <WeatherItem city={city}/>
+=======
+ <h1>Tilbud under postnummert 2800 </h1>
+ <WeatherItem weather={weather}/>
+>>>>>>> 1f891ef3c0b915671b81452d5b7800e75e172a87
 </div>
-
 
 <SideFilter setSortedData={setSortedData}
                             data={initalData} 
@@ -81,40 +65,34 @@ return (<div>
 
 <MapContainerAll data={fetchedData} initLoc={[{lat:54, lng:12.4}]} />
  
-  <FoodItem fetchedData={sortedData ? sortedData : fetchedData} location={location}/> </div>);
+  {err && <h3 style={{display:"block",textAlign:"center"}}>{err}</h3>}
+<FoodItem fetchedData={sortedData ? sortedData : fetchedData} location={location}/> </div>);
+
 }
 
 
 
 
-
-
-function FoodItem({fetchedData}) {
+function FoodItem({fetchedData, location}) {
     let brandPhoto;
-  
-    let returned = fetchedData.map((data,index) => 
-    {
 
-if(data.clearances.length === 0){
-    return null;
-}else{
- 
-if(data.store.brand === "netto"){
-    brandPhoto = NettoLogo
-}    
+    let returned = fetchedData.map((data, index) => {
 
-if(data.store.brand === "foetex"){
-    brandPhoto = FoetexLogo
-}  
-if(data.store.brand === "bilka"){
-  brandPhoto = BilkaLogo
+        if(data.clearances.length === 0){
+            return null;
+        } else {
+        
+        if(data.store.brand === "netto"){
+            brandPhoto = NettoLogo
+        }    
+
+        if(data.store.brand === "foetex"){
+            brandPhoto = FoetexLogo
 }  
 
-
-     return (
+      return (
    
-   <div className="stores" key={index}>   
-   <div>
+   <div className="stores" key={index}>
     <img src={brandPhoto} alt="" style={{width:"30%"}}></img> 
     <div style={{display:"flex"}}>
        <h3 style={{display:"inline-block"}}> {data.store.name} </h3>
@@ -125,54 +103,45 @@ if(data.store.brand === "bilka"){
      
 
         {data.clearances.map((data) => {
-    
+
+     return( 
    
-   
-    return( 
-    
-    <div style={{display: "inline-block"} }>
+    <div style={{display: "inline-block"}} key={data.product.description} >
     
       <Popup modal trigger={
     
-    <div className="card" key={data.product.ean}   >
-    
+    <div className="card" onClick={()=> {console.log(data.product.description)}}>
     <img className="photo" src={data.product.image ? data.product.image : imageNotFound} alt="" ></img> 
      <div className="container">
-     <h1 className="description" style={{}}>{data.product.description}</h1>    
+     <h1 className="description">{data.product.description}</h1>    
      <p className="price" style={{fontWeight: "bold", color:"black"}}> {data.offer.newPrice} kr.</p>
     </div>
     </div>
-    }>
-     <h1 className="description" style={{fontSize: "16px"}}>{data.product.description}</h1>    
+
+      }>
+    
+     <h1 className="description">{data.product.description}</h1>    
        <p className="price" style={{fontWeight: "bold", color:"black"}}> Nuværende Pris: {data.offer.newPrice} kr.</p>
        <p className="price">Original Pris: {data.offer.originalPrice} kr.</p>
        <p className="price">Prisforskel: {data.offer.discount} kr.</p>
        <p className="price">Besparelse: {data.offer.percentDiscount} %</p>
        <p>Varen udløber:</p>
        <p>d. {data.offer.endTime.replace(/T/g, " ").substring(0,19)}</p>
-    <p>Der er {data.offer.stock} tilbage</p>
-    
+       <p>Der er {data.offer.stock} tilbage</p>
+ 
   
-      </Popup>
-    
-    </div>
-    
-    ) 
-        
+          </Popup>
+        </div>
+                     ) /* Mappings Return ends here */
 
-  
-       }) 
-       
-}
-    
-      
-
-        
-</div>
+                  })  /* Mapping ends here */
+                } 
       </div>
-      );
-      }
+         );
+      } 
     });
+
     return returned;
   }
   
+

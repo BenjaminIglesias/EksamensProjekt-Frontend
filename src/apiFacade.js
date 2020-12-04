@@ -1,5 +1,5 @@
 import URL from "./settings";
-
+import postnummer from "./postnummer"
 function handleHttpErrors(res) {
   if (!res.ok) {
     return Promise.reject({ status: res.status, fullError: res.json() });
@@ -24,9 +24,11 @@ function apiFacade() {
     return fetch(URL + "/api/info/" + role, options).then(handleHttpErrors);
   };
 
-  const fetchDataFoodWasteByPostnummer = (value) => {  
+  const fetchDataFoodWasteByPostnummer = (value,) => {  
     const options = makeOptions("GET", true); //True add's the token
-    return fetch(URL + "/api/foodwaste/postnummer/"+value , options).then(handleHttpErrors);
+    let city = "/"+postnummer[value]
+      city = getAndSetCurrentCity(city)
+    return fetch(URL + "/api/foodwaste/data/"+value+city , options).then(handleHttpErrors);
   };
 
   const fetchDataFoodWasteBySearchZip = (zip) => {
@@ -34,10 +36,6 @@ function apiFacade() {
     return fetch(URL + "/api/foodwaste/zip"+zip , options).then(handleHttpErrors);
   };
 
-  const fetchDataWeatherByCity = (city) => {
-    const options = makeOptions("GET"); //True add's the token
-    return fetch(URL + "/api/vejret/by/"+city , options).then(handleHttpErrors);
-  };
 
  
   const makeOptions = (method, addToken, body) => {
@@ -78,10 +76,26 @@ function apiFacade() {
     login,
     logout,
     fetchData,
-    fetchDataWeatherByCity,
     fetchDataFoodWasteByPostnummer
     
   };
 }
 const facade = apiFacade();
 export default facade;
+
+
+
+
+const getAndSetCurrentCity = (city) => {
+
+   if (city.indexOf(" ") > 0) {
+     let i = city.indexOf(" ");
+     let cityCut = city.substr(0, i);
+     return cityCut
+     } else {
+      return city;
+    }
+   }
+ 
+
+
