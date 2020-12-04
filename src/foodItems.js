@@ -46,16 +46,11 @@ return (<div>
 
 <div className="infoTitle"> 
 <br></br>
-<<<<<<< HEAD
 
  <h1>Tilbud under postnummer {postalCode} </h1>
  
 
  <WeatherItem city={city}/>
-=======
- <h1>Tilbud under postnummert 2800 </h1>
- <WeatherItem weather={weather}/>
->>>>>>> 1f891ef3c0b915671b81452d5b7800e75e172a87
 </div>
 
 <SideFilter setSortedData={setSortedData}
