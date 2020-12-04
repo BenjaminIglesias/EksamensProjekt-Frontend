@@ -50,6 +50,7 @@ function Products() {
 }
 
 let globalPostalCode = "fail";
+
 function Home() {
   
   const [postalCode, setPostalCode] = useState("");

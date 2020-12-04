@@ -67,7 +67,7 @@ return (<div>
 <div className="infoTitle"> 
 <br></br>
 
- <h1>Tilbud under postnummert 2800 </h1>
+ <h1>Tilbud under postnummer {postalCode} </h1>
  
 
  <WeatherItem city={city}/>
