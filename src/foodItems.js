@@ -50,7 +50,7 @@ return (<div>
  <h1>Tilbud under postnummer {postalCode} </h1>
  
 
- <WeatherItem city={city}/>
+ <WeatherItem weather={weather}/>
 </div>
 
 <SideFilter setSortedData={setSortedData}
