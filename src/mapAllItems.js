@@ -17,7 +17,7 @@ import mapIcon from "./icons/googlemapIcon.png"
      
         <Popup modal trigger={
             <div className="showmapAllBut">
-                <h4>Show stores on map</h4>
+                <h4>Vis butikker på kort</h4>
    <img style={{width:"50%", cursor:"pointer"}} src={mapIcon}/>
             </div>
      

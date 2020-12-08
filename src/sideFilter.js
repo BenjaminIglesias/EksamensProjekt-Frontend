@@ -53,12 +53,12 @@ return (
 
    
     <div className="sideFilter">
-   <h3>Sort after</h3>
+   <h3>Sorter efter</h3>
 <div> <button className={resetBut} onClick={() => selectSort("default")}> </button> <p>Default</p> </div>
         <div className="sideLine"></div>
-        <div> <button className={priceBut} onClick={() => selectSort("price")} ></button> Price </div>
+        <div> <button className={priceBut} onClick={() => selectSort("price")} ></button> Pris </div>
         <div> <button className={discountBut} onClick={() => selectSort("discount")} ></button> Besparelse </div>
-        <div> <button className={distanceBut} onClick={() => selectSort("distance")}></button> Distance </div>
+        <div> <button className={distanceBut} onClick={() => selectSort("distance")}></button> Afstand </div>
    
     </div>
 

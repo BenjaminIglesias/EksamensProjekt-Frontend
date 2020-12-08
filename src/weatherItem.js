@@ -10,7 +10,7 @@ export default function WheaterItem({weather}){
 
 return(
     <div className="weatherBox">
-        <h5>Current weather</h5>
+        <h5>Nuværende temperatur</h5>
         <img src={weatherImage}/>
         <h3>{weather.temperature}°</h3>
     </div>

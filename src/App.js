@@ -16,14 +16,19 @@ function Header({ loggedIn }) {
       <ul className="App-header header">
         <li>
           <NavLink exact activeClassName="selected" to="/">
-            Home
+            Hjem
           </NavLink>
         </li>
         <li>
           <NavLink activeClassName="selected" to="/LoginPage">
             Login
           </NavLink>
-        </li>        
+        </li>  
+        <li>
+          <NavLink activeClassName="selected" to="/CreateUser">
+            Ny bruger
+          </NavLink>
+        </li>      
         {loggedIn && (
         <li className="Shoppingcart" style={{float:'right'}}>
           <NavLink activeClassName="selected" to="/Shoppingcart">
@@ -126,6 +131,8 @@ function LogIn({ login }) {
     </div>
   );
 }
+
+
 function LoggedIn() {
   const [dataFromServer, setDataFromServer] = useState("");
   const jwt = require("jsonwebtoken");
@@ -147,14 +154,77 @@ function LoggedIn() {
       <h3>Role: {role}</h3>
     </div>
   );
+
 }
+
+
+function CreateUser(){
+  
+  const init = { username: "", password: "" };
+  const [UserCredentials, setUserCredentials] = useState(init);
+  const [errFromServer, setErrFromServer] = useState({message:""});
+  const performCreate = (evt) => {
+    evt.preventDefault();
+    console.log(UserCredentials.username, UserCredentials.password)
+    facade.createUser(UserCredentials.username, UserCredentials.password).catch(err =>  err.fullError).then((data) => setErrFromServer(data));
+
+};
+
+
+  const onChange = (evt) => {
+    setUserCredentials({
+      ...UserCredentials,
+      [evt.target.id]: evt.target.value,
+    });
+  };
+
+
+
+
+  return (
+    <div>
+    
+    
+      <h2>Opret ny bruger</h2>
+      {errFromServer.message}
+      <form onChange={onChange}>
+        <input placeholder="Brugernavn" id="username" />
+        <input type="password" placeholder="Password" id="password" />
+        <button onClick={performCreate}>Opret ny Bruger</button>
+      </form>
+    </div> 
+   
+
+
+  )
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function App() {
 const [loggedIn, setLoggedIn] = useState(false);
+
 globalPostalCode = "fail"
-
-
-
 
   return (
     <div>
@@ -165,6 +235,9 @@ globalPostalCode = "fail"
         </Route>
         <Route exact path="/LoginPage">
           <LoginPage setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
+        </Route>
+        <Route exact path="/CreateUser">
+          <CreateUser/>     
         </Route>
         <Route exact path="/Products">
           <Products/>

@@ -24,10 +24,27 @@ function apiFacade() {
     return fetch(URL + "/api/info/" + role, options).then(handleHttpErrors);
   };
 
+
+
+  const createUser = (user, password) => {
+
+    const options = makeOptions("POST", true, {
+      userName: user,
+      userPass: password,
+    });
+    
+    return fetch(URL + "/api/users/tilføj", options)
+      .then(handleHttpErrors)
+      ;
+  };
+
+
+
   const fetchDataFoodWasteByPostnummer = (value) => {  
     const options = makeOptions("GET", true); //True add's the token
     let city = "/"+postnummer[value]
       city = getAndSetCurrentCity(city)
+      console.log(URL + "/api/foodwaste/data/"+value+city)
     return fetch(URL + "/api/foodwaste/data/"+value+city , options).then(handleHttpErrors);
   };
 
@@ -76,7 +93,8 @@ function apiFacade() {
     login,
     logout,
     fetchData,
-    fetchDataFoodWasteByPostnummer
+    fetchDataFoodWasteByPostnummer,
+    createUser
     
   };
 }
