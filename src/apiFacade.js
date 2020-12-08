@@ -65,6 +65,11 @@ function apiFacade() {
     .then(handleHttpErrors);
   }
 
+  const removeDataFarvorit = (id) => {
+    const options = makeOptions("PUT", true); //True add's the token
+    return fetch(URL + "/api/users/favorit/remove/" + id, options)
+    .then(handleHttpErrors);
+  }
   
   const fetchDataFoodWasteBySearchZip = (zip) => {
     const options = makeOptions("GET", true); //True add's the token
@@ -116,7 +121,8 @@ function apiFacade() {
     createUser,
     addFavoritToUser,
     fetchDataFavorits,
-    fetchDataFoodWasteBySearchZip
+    fetchDataFoodWasteBySearchZip,
+    removeDataFarvorit
     
   };
 }

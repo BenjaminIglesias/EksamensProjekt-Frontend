@@ -217,30 +217,38 @@ function CreateUser(){
 function Favorits({favorits}){
 
 const [stores, setStores] = useState([])
-
-const {postnumre, storeNames} = favorits
+const [favorit, setFavorit] = useState(favorits)
+const {postnumre} = favorits
+const [storeNames, setStoreNames] = useState(favorits.storeNames)
 const [zip, setZip] = useState(postnumre[0])
 useEffect(() => {
-  
+ 
 let d =[]
+
+getFavorits(setFavorit)
+setStoreNames(favorit.storeNames)
+
     facade.fetchDataFoodWasteBySearchZip(zip)
             .then(data => {
         
               setStores(data)
               
               data.map((dat) => {
-
-                if (storeNames.includes(dat.store.name)) {
-                  d.push(dat)
-                }  
+                  storeNames.map((store) => {
+                    if (store.includes(dat.store.name)) {
+                      d.push(dat)
+                    }  
+                  })
+                
               })
               setStores(d)
             })
    
-}, [zip])
+}, [zip, storeNames])
 
 
-
+let zips = favorit ? favorit.postnumre : postnumre
+let sNames = favorit ? favorit.storeNames : favorits.storeNames
   return ( <div> 
   
 <div className="infoTitle"> 
@@ -249,10 +257,9 @@ let d =[]
   <h1>Tilbud i dine favorit butikker {zip}</h1>
   <br></br>
   <div className="zipButDiv">
-  {postnumre.map((nr) => {
+  {zips.map((nr) => {
       return <button key={nr} className="zipBut" onClick={() => {
         setZip(nr) 
-      console.log(nr)
       } }>{nr}</button>
     })}
   </div>
@@ -262,7 +269,7 @@ let d =[]
 
 
 
- <FoodItem fetchedData={stores}/>
+ <FoodItem fetchedData={stores} fav={sNames} setStoreNames={setStoreNames}/>
   
  </div>);
 
@@ -271,7 +278,7 @@ let d =[]
 
 
 
-function FoodItem({fetchedData}) {
+function FoodItem({fetchedData, fav, setStoreNames}) {
 
 
     let brandPhoto;
@@ -302,7 +309,20 @@ function FoodItem({fetchedData}) {
      
      
     </div>
-      
+      {fav.map((d, index) => {
+
+        let res =[...fav]
+        if (d[0] == data.store.name){
+          return <button onClick={() => {
+            facade.removeDataFarvorit(d[1])
+            
+          res[index] = ["NaN", "NaN"]
+
+           setStoreNames(res)
+
+          }}>remove from favorits</button>
+        }
+      })}
       <p style={{marginTop:"0px"}}>{data.store.address.street}, {data.store.address.zip} {data.store.address.city}</p>
      
 
@@ -359,17 +379,6 @@ function FoodItem({fetchedData}) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 function App() {
 const [loggedIn, setLoggedIn] = useState(false);
 const [favorits, setFavorits] = useState({});
@@ -405,11 +414,13 @@ globalPostalCode = "fail"
 function getFavorits(setFavorits){
   let postnumre = []
   let storeNames = []
+  let favID = []
  facade.fetchDataFavorits().then(data => {
-    console.log(data)
+
   data.map((obj) => {
     if (!storeNames.includes(obj.storeName)){
-    storeNames.push(obj.storeName)
+    storeNames.push([obj.storeName, obj.favID])
+    favID.push(obj.favID)
     }
   })
 
