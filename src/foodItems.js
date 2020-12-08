@@ -9,8 +9,8 @@ import NettoLogo from "./logos/netto.png";
 import FoetexLogo from "./logos/foetex.png"
 import imageNotFound from "./imageNotFound.png"
 import WeatherItem from "./weatherItem"
-
-
+import heartfalse from "./icons/heart-false.png";
+import heartrue from "./icons/heart-true.png";
 export default function FoodItems({postalCode}){  
     const [fetchedData, setfetchedData] = useState([]);
     const [initalData, setInitalData] = useState([]);
@@ -61,14 +61,16 @@ return (<div>
 <MapContainerAll data={fetchedData} initLoc={[{lat:54, lng:12.4}]} />
  
   {err && <h3 style={{display:"block",textAlign:"center"}}>{err}</h3>}
-<FoodItem fetchedData={sortedData ? sortedData : fetchedData} location={location}/> </div>);
+<FoodItem fetchedData={sortedData ? sortedData : fetchedData} location={location} postalCode={postalCode}/> </div>);
 
 }
 
 
 
 
-function FoodItem({fetchedData, location}) {
+export function FoodItem({fetchedData, location, postalCode}) {
+
+
     let brandPhoto;
 
     let returned = fetchedData.map((data, index) => {
@@ -85,6 +87,9 @@ function FoodItem({fetchedData, location}) {
             brandPhoto = FoetexLogo
 }  
 
+let heartButton = heartfalse
+  
+
       return (
    
    <div className="stores" key={index}>
@@ -92,6 +97,10 @@ function FoodItem({fetchedData, location}) {
     <div style={{display:"flex"}}>
        <h3 style={{display:"inline-block"}}> {data.store.name} </h3>
        <MapContainer loc={data.store.coordinates} name={data.store.name}/>
+      <img src={heartButton} className="heartBut" onClick={() => {
+        facade.addFavoritToUser(postalCode, data.store.name)
+   
+        }}></img>
     </div>
       
       <p style={{marginTop:"0px"}}>{data.store.address.street}, {data.store.address.zip} {data.store.address.city}</p>

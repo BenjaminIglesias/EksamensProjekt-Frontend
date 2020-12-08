@@ -5,8 +5,11 @@ import WelcomePage from "./welcomePage";
 import { Switch, Route, NavLink } from "react-router-dom";
 import FoodItems from "./foodItems";
 import shoppingcart from "./logos/shopping-cart.PNG";
-
-
+import postnummer from "./postnummer";
+import NettoLogo from "./logos/netto.png";
+import FoetexLogo from "./logos/foetex.png"
+import imageNotFound from "./imageNotFound.png"
+import Popup from 'reactjs-popup';
 
 
 function Header({ loggedIn }) {
@@ -30,6 +33,12 @@ function Header({ loggedIn }) {
           </NavLink>
         </li>      
         {loggedIn && (
+          <>
+          <li>
+        <NavLink activeClassName="selected" to="/Favorits">
+          Favorits
+         </NavLink>
+     </li>
         <li className="Shoppingcart" style={{float:'right'}}>
           <NavLink activeClassName="selected" to="/Shoppingcart">
             <img
@@ -41,14 +50,17 @@ function Header({ loggedIn }) {
             />
           </NavLink>
         </li>
+       
+    </>
 	   )}
-     	
+   
       </ul>
     </div>
   );
 }
+
+
 function Products() {
- 
 return <FoodItems postalCode={globalPostalCode} />; 
 }
 
@@ -67,7 +79,7 @@ function handleChange(newValue){
   return <WelcomePage  postalCode={postalCode} onChange={handleChange}/>;
 }
 
-function LoginPage({ setLoggedIn, loggedIn }) {
+function LoginPage({ setLoggedIn, loggedIn, setFavorits }) {
   const [loggedInError, setLoggedInError] = useState("");
 
   const logout = () => {
@@ -97,7 +109,7 @@ function LoginPage({ setLoggedIn, loggedIn }) {
         <LogIn login={login} />
       ) : (
         <div>
-          <LoggedIn />
+          <LoggedIn setFavorits={setFavorits}  />
           <button onClick={logout}>Logout</button>
         </div>
       )}
@@ -112,6 +124,7 @@ function LogIn({ login }) {
   const performLogin = (evt) => {
     evt.preventDefault();
     login(loginCredentials.username, loginCredentials.password);
+    
   };
   const onChange = (evt) => {
     setLoginCredentials({
@@ -133,7 +146,7 @@ function LogIn({ login }) {
 }
 
 
-function LoggedIn() {
+function LoggedIn({setFavorits}) {
   const [dataFromServer, setDataFromServer] = useState("");
   const jwt = require("jsonwebtoken");
   const token = localStorage.getItem("jwtToken");
@@ -145,6 +158,7 @@ function LoggedIn() {
   }
   useEffect(() => {
     facade.fetchData(roleToFetch).then((data) => setDataFromServer(data.msg));
+    getFavorits(setFavorits)
   }, []);
 
   return (
@@ -200,6 +214,141 @@ function CreateUser(){
 }
 
 
+function Favorits({favorits}){
+
+const [stores, setStores] = useState([])
+
+const {postnumre, storeNames} = favorits
+const [zip, setZip] = useState(postnumre[0])
+useEffect(() => {
+  
+let d =[]
+    facade.fetchDataFoodWasteBySearchZip(zip)
+            .then(data => {
+        
+              setStores(data)
+              
+              data.map((dat) => {
+
+                if (storeNames.includes(dat.store.name)) {
+                  d.push(dat)
+                }  
+              })
+              setStores(d)
+            })
+   
+}, [zip])
+
+
+
+  return ( <div> 
+  
+<div className="infoTitle"> 
+<br></br>
+
+  <h1>Tilbud i dine favorit butikker {zip}</h1>
+  <br></br>
+  <div className="zipButDiv">
+  {postnumre.map((nr) => {
+      return <button key={nr} className="zipBut" onClick={() => {
+        setZip(nr) 
+      console.log(nr)
+      } }>{nr}</button>
+    })}
+  </div>
+  
+
+</div>
+
+
+
+ <FoodItem fetchedData={stores}/>
+  
+ </div>);
+
+}
+
+
+
+
+function FoodItem({fetchedData}) {
+
+
+    let brandPhoto;
+
+    let returned = fetchedData.map((data, index) => {
+
+        if(data.clearances.length === 0){
+            return null;
+        } else {
+        
+        if(data.store.brand === "netto"){
+            brandPhoto = NettoLogo
+        }    
+
+        if(data.store.brand === "foetex"){
+            brandPhoto = FoetexLogo
+}  
+
+
+  
+
+      return (
+   
+   <div className="stores" key={index}>
+    <img src={brandPhoto} alt="" style={{width:"30%"}}></img> 
+    <div style={{display:"flex"}}>
+       <h3 style={{display:"inline-block"}}> {data.store.name} </h3>
+     
+     
+    </div>
+      
+      <p style={{marginTop:"0px"}}>{data.store.address.street}, {data.store.address.zip} {data.store.address.city}</p>
+     
+
+        {data.clearances.map((data) => {
+
+     return( 
+   
+    <div style={{display: "inline-block"}} key={data.product.description} >
+    
+      <Popup modal trigger={
+    
+    <div className="card" onClick={()=> {console.log(data.product.description)}}>
+    <img className="photo" src={data.product.image ? data.product.image : imageNotFound} alt="" ></img> 
+     <div className="container">
+     <h1 className="description">{data.product.description}</h1>    
+     <p className="price" style={{fontWeight: "bold", color:"black"}}> {data.offer.newPrice} kr.</p>
+    </div>
+    </div>
+
+      }>
+    
+     <h1 className="description">{data.product.description}</h1>    
+       <p className="price" style={{fontWeight: "bold", color:"black"}}> Nuværende Pris: {data.offer.newPrice} kr.</p>
+       <p className="price">Original Pris: {data.offer.originalPrice} kr.</p>
+       <p className="price">Prisforskel: {data.offer.discount} kr.</p>
+       <p className="price">Besparelse: {data.offer.percentDiscount} %</p>
+       <p>Varen udløber:</p>
+       <p>d. {data.offer.endTime.replace(/T/g, " ").substring(0,19)}</p>
+       <p>Der er {data.offer.stock} tilbage</p>
+ 
+  
+          </Popup>
+        </div>
+                     ) /* Mappings Return ends here */
+
+                  })  /* Mapping ends here */
+                } 
+      </div>
+         );
+      } 
+    });
+
+    return returned;
+  }
+ 
+
 
 
 
@@ -223,6 +372,8 @@ function CreateUser(){
 
 function App() {
 const [loggedIn, setLoggedIn] = useState(false);
+const [favorits, setFavorits] = useState({});
+
 
 globalPostalCode = "fail"
 
@@ -231,10 +382,10 @@ globalPostalCode = "fail"
       <Header loggedIn={loggedIn} />
       <Switch>
         <Route exact path="/">
-          <Home    />
+          <Home />
         </Route>
         <Route exact path="/LoginPage">
-          <LoginPage setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
+          <LoginPage setLoggedIn={setLoggedIn} loggedIn={loggedIn} setFavorits={setFavorits} />
         </Route>
         <Route exact path="/CreateUser">
           <CreateUser/>     
@@ -242,8 +393,38 @@ globalPostalCode = "fail"
         <Route exact path="/Products">
           <Products/>
         </Route>
+        <Route exact path="/Favorits">
+          <Favorits favorits={favorits}/>
+        </Route>
       </Switch>
     </div>
   );
+}
+
+
+function getFavorits(setFavorits){
+  let postnumre = []
+  let storeNames = []
+ facade.fetchDataFavorits().then(data => {
+    console.log(data)
+  data.map((obj) => {
+    if (!storeNames.includes(obj.storeName)){
+    storeNames.push(obj.storeName)
+    }
+  })
+
+  data.map((obj) => {
+      if (!postnumre.includes(obj.postnummer)){
+       postnumre.push(obj.postnummer)
+       }     
+    })
+ 
+  setFavorits({
+    postnumre: postnumre,
+    storeNames: storeNames
+  })
+  })
+
+
 }
 export default App;

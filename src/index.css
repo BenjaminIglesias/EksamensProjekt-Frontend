@@ -106,6 +106,35 @@ margin: 0px;
 
 }
 
+.heartBut{
+  margin-top: 12px;
+  margin-left: 10px;
+  height: 25px;
+
+}
+
+
+.heartBut:hover{
+
+  filter: brightness(0.9) invert(.7) sepia(.5) hue-rotate(100deg) saturate(200%);
+}
+
+
+
+.zipButDiv{
+  margin-left: 20px;;
+}
+.zipButDiv button{
+  background-color: lightblue;
+  border-width: 0px;
+  margin: 5px;
+  padding: 8px;
+  border-radius: 10px;
+  outline: none;
+}
+.zipButDiv button:hover{
+  background-color: yellowgreen;
+}
 .showmapBut{
 padding-top: 10px;
 margin-left: 10px;;

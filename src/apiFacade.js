@@ -21,7 +21,7 @@ function apiFacade() {
   };
   const fetchData = (role) => {
     const options = makeOptions("GET", true); //True add's the token
-    return fetch(URL + "/api/info/" + role, options).then(handleHttpErrors);
+    return fetch(URL + "/api/users/" + role, options).then(handleHttpErrors);
   };
 
 
@@ -44,16 +44,35 @@ function apiFacade() {
     const options = makeOptions("GET", true); //True add's the token
     let city = "/"+postnummer[value]
       city = getAndSetCurrentCity(city)
-      console.log(URL + "/api/foodwaste/data/"+value+city)
     return fetch(URL + "/api/foodwaste/data/"+value+city , options).then(handleHttpErrors);
   };
 
 
+
+  const addFavoritToUser = (postnummer, storeName) => {
+    console.log(postnummer, storeName)
+    const options = makeOptions("POST", true, {
+      postnummer: postnummer,
+      storeName: storeName,
+    });
+    return fetch(URL + "/api/users/favorit", options)
+      .then(handleHttpErrors);
+  };
+
+  const fetchDataFavorits = () => {
+    const options = makeOptions("GET", true); //True add's the token
+    return fetch(URL + "/api/users/user/favorit", options)
+    .then(handleHttpErrors);
+  }
+
   
   const fetchDataFoodWasteBySearchZip = (zip) => {
     const options = makeOptions("GET", true); //True add's the token
-    return fetch(URL + "/api/foodwaste/zip"+zip , options).then(handleHttpErrors);
+    return fetch(URL + "/api/foodwaste/postnummer/"+zip , options).then(handleHttpErrors);
   };
+
+
+
 
   const makeOptions = (method, addToken, body) => {
     var opts = {
@@ -94,7 +113,10 @@ function apiFacade() {
     logout,
     fetchData,
     fetchDataFoodWasteByPostnummer,
-    createUser
+    createUser,
+    addFavoritToUser,
+    fetchDataFavorits,
+    fetchDataFoodWasteBySearchZip
     
   };
 }
