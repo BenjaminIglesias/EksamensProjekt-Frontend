@@ -60,8 +60,8 @@ function Header({ loggedIn }) {
 }
 
 
-function Products() {
-return <FoodItems postalCode={globalPostalCode} />; 
+function Products({loggedIn}) {
+return <FoodItems postalCode={globalPostalCode} loggedIn={loggedIn}/>; 
 }
 
 let globalPostalCode = "fail";
@@ -276,13 +276,9 @@ let sNames = favorit ? favorit.storeNames : favorits.storeNames
 }
 
 
-
-
 function FoodItem({fetchedData, fav, setStoreNames}) {
 
-
     let brandPhoto;
-
     let returned = fetchedData.map((data, index) => {
 
         if(data.clearances.length === 0){
@@ -296,24 +292,19 @@ function FoodItem({fetchedData, fav, setStoreNames}) {
         if(data.store.brand === "foetex"){
             brandPhoto = FoetexLogo
 }  
-
-
-  
-
       return (
    
    <div className="stores" key={index}>
     <img src={brandPhoto} alt="" style={{width:"30%"}}></img> 
     <div style={{display:"flex"}}>
-       <h3 style={{display:"inline-block"}}> {data.store.name} </h3>
-     
+       <h3 style={{display:"inline-block", marginBottom:"5px"}}> {data.store.name} </h3>
      
     </div>
       {fav.map((d, index) => {
 
         let res =[...fav]
         if (d[0] == data.store.name){
-          return <button onClick={() => {
+          return <button className="removeButton" key={index} onClick={() => {
             facade.removeDataFarvorit(d[1])
             
           res[index] = ["NaN", "NaN"]
@@ -400,7 +391,7 @@ globalPostalCode = "fail"
           <CreateUser/>     
         </Route>
         <Route exact path="/Products">
-          <Products/>
+          <Products loggedIn={loggedIn}/>
         </Route>
         <Route exact path="/Favorits">
           <Favorits favorits={favorits}/>

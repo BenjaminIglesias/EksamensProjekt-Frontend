@@ -11,7 +11,7 @@ import imageNotFound from "./imageNotFound.png"
 import WeatherItem from "./weatherItem"
 import heartfalse from "./icons/heart-false.png";
 import heartrue from "./icons/heart-true.png";
-export default function FoodItems({postalCode}){  
+export default function FoodItems({postalCode, loggedIn}){  
     const [fetchedData, setfetchedData] = useState([]);
     const [initalData, setInitalData] = useState([]);
     const [sortedData, setSortedData] = useState();
@@ -61,14 +61,14 @@ return (<div>
 <MapContainerAll data={fetchedData} initLoc={[{lat:54, lng:12.4}]} />
  
   {err && <h3 style={{display:"block",textAlign:"center"}}>{err}</h3>}
-<FoodItem fetchedData={sortedData ? sortedData : fetchedData} location={location} postalCode={postalCode}/> </div>);
+<FoodItem fetchedData={sortedData ? sortedData : fetchedData} loggedIn={loggedIn} postalCode={postalCode}/> </div>);
 
 }
 
 
 
 
-export function FoodItem({fetchedData, location, postalCode}) {
+export function FoodItem({fetchedData, loggedIn, postalCode}) {
 
 
     let brandPhoto;
@@ -97,10 +97,11 @@ let heartButton = heartfalse
     <div style={{display:"flex"}}>
        <h3 style={{display:"inline-block"}}> {data.store.name} </h3>
        <MapContainer loc={data.store.coordinates} name={data.store.name}/>
-      <img src={heartButton} className="heartBut" onClick={() => {
+       {loggedIn && <img src={heartButton} className="heartBut" onClick={() => {
         facade.addFavoritToUser(postalCode, data.store.name)
-   
-        }}></img>
+          console.log(loggedIn)
+        }}></img>}
+      
     </div>
       
       <p style={{marginTop:"0px"}}>{data.store.address.street}, {data.store.address.zip} {data.store.address.city}</p>
